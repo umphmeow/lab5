@@ -46,38 +46,35 @@ def F_iter(n):
 
     return F[n]
 
-# Задаем значения n для вычислений
-n_values = list(range(1, 101))
+print("Программа вычисляет значение функции F для каждого введеного n двумя способами рекурсивно и итерационо: F(n) = sin(F(n–1)) – G(n–1),где G(n) = 2*F(n–1) - (n–1)!")
 
-# Вычисляем значения функций F(n) и G(n) с помощью timeit
-recursive_times = []
-iterative_times = []
-for n in n_values:
-    # Вычисляем время выполнения функции F_recu(n) с помощью модуля timeit
-    recursive_time = timeit.timeit(lambda: F_recu(n), number=100)
-    recursive_times.append(recursive_time)
+n_values = input("Введите значения n через пробел, не превышающие 171: ").split()
+n_values = [int(n) for n in n_values if n.isdigit() and 1 <= int(n) <= 171]
 
-    # Вычисляем время выполнения функции F_iter(n) с помощью модуля timeit
-    iterative_time = timeit.timeit(lambda: F_iter(n), number=100)
-    iterative_times.append(iterative_time)
+if len(n_values) == 0:
+    print("Вы не ввели корректные значения n.")
+else:
+    # Вычисляем значения функций F(n) и G(n) с помощью timeit
+    recursive_times = []
+    iterative_times = []
+    for n in n_values:
+        recursive_time = timeit.timeit(lambda: F_recu(n), number=100)
+        recursive_times.append(recursive_time)
+        iterative_time = timeit.timeit(lambda: F_iter(n), number=100)
+        iterative_times.append(iterative_time)
 
-    # Выводим результаты вычислений
-    print("n = {}, F_recursive({}) = {}, G_recursive({}) = {}, time = {:.8f} seconds".format(n, n, F_recu(n), n, G_recu(n), recursive_time))
-    print("n = {}, F_iterative({}) = {}, time = {:.8f} seconds".format(n, n, F_iter(n), iterative_time))
-    print()
+    # Сохраняем результаты вычислений в таблицу
+    data = {'n': n_values, 'recursive_time': recursive_times, 'iterative_time': iterative_times}
+    df = pd.DataFrame(data)
 
-# Сохраняем результаты вычислений в таблицу
-data = {'n': n_values, 'recursive_time': recursive_times, 'iterative_time': iterative_times}
-df = pd.DataFrame(data)
+    # Выводим таблицу на экран
+    print(df)
 
-# Выводим таблицу на экран
-print(df)
-
-# Строим график зависимости времени выполнения от значения n
-plt.plot(n_values, recursive_times, 'ro', label='Recursive')
-plt.plot(n_values, iterative_times, 'bo', label='Iterative')
-plt.xlabel('n')
-plt.ylabel('Time (seconds)')
-plt.title('Time for calculating F(n)')
-plt.legend()
-plt.show()
+    # Строим график зависимости времени выполнения от значения n
+    plt.plot(n_values, recursive_times, 'ro', label='Recursive')
+    plt.plot(n_values, iterative_times, 'bo', label='Iterative')
+    plt.xlabel('n')
+    plt.ylabel('Time (seconds)')
+    plt.title('Time for calculating F(n)')
+    plt.legend()
+    plt.show()
