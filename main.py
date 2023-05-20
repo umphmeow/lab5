@@ -3,49 +3,48 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import timeit
 
-max_recursion_depth = 3000 
-
-
-memo_F = {1: 1}
+memory_F = {1: 1}
 def F_recu(n):
-    if n in memo_F:
-        return memo_F[n]
+    if n in memory_F:
+        return memory_F[n]
     else:
-        memo_F[n] = math.sin(F_recu(n-1)) - G_recu(n-1)
-        return memo_F[n]
+        memory_F[n] = math.sin(F_recu(n - 1)) - G_recu(n - 1)
+        return memory_F[n]
 
 
-memo_G = {1: 1}
-memo_factorial = {1: 1}
+memory_G = {1: 1}
+memory_factorial = {1: 1}
 def G_recu(n):
-    if n in memo_G:
-        return memo_G[n]
+    if n in memory_G:
+        return memory_G[n]
     else:
         F_n_1 = F_recu(n - 1)
-        if n-1 in memo_factorial:
-            factorial_n_1 = memo_factorial[n-1]
+        if n-1 in memory_factorial:
+            factorial_n_1 = memory_factorial[n - 1]
         else:
             factorial_n_1 = math.factorial(n - 1)
-            memo_factorial[n-1] = factorial_n_1
-        memo_G[n] = 2*F_n_1 - factorial_n_1
-        return memo_G[n]
+            memory_factorial[n - 1] = factorial_n_1
+        memory_G[n] = 2 * F_n_1 - factorial_n_1
+        return memory_G[n]
 
 
 def F_iter(n):
-    F = [0] * (n+1)
-    G = [0] * (n+1)
-    F[1] = G[1] = 1
+    F_1 = F_2 = 1
+    G_1 = G_2 = 1
 
     for i in range(2, n+1):
-        F[i] = math.sin(F[i-1]) - G[i-1]
-        G[i] = 2*F[i-1] - math.factorial(i-1)
+        F = math.sin(F_1) - G_1
+        G = 2*F_1 - math.factorial(i-1)
 
-    return F[n]
+        F_2, F_1 = F_1, F
+        G_2, G_1 = G_1, G
+
+    return F
 
 print("Программа вычисляет значение функции F для каждого введеного n двумя способами рекурсивно и итерационо: F(n) = sin(F(n–1)) – G(n–1),где G(n) = 2*F(n–1) - (n–1)!")
 
-n_values = input("Введите значения n через пробел, не превышающие 171: ").split()
-n_values = [int(n) for n in n_values if n.isdigit() and 1 <= int(n) <= 171]
+n_values = input("Введите значения n через пробел, не превышающие 171, но больше 0: ").split()
+n_values = [int(n) for n in n_values if n.isdigit() and 1 <= int(n) <= 173]
 
 if len(n_values) == 0:
     print("Вы не ввели корректные значения n.")
