@@ -3,9 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import timeit
 
-max_recursion_depth = 3000
-
-
 memo_F = {1: 1}
 def F_recu(n):
     if n in memo_F:
